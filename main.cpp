@@ -2,14 +2,16 @@
 #include <stdlib.h>
 #include <iostream>
 
-#include "menu_aldeanos.h"
-#include "civilizacion.h"
+// #include "menu_aldeanos.h"
+// #include "civilizacion.h"
+// #include "civilizaciones.h"
+#include "menu_civilizaciones.h"
 
 int main() {
-    Civilizacion *civilizacion = civilizacionInit("Romanos");
-    menuAldeanos(civilizacion->aldeanosLista);
+    Civilizaciones *civilizaciones = civilizacionesInit();
+    menuCivilizaciones(civilizaciones);
 
-    civilizacion = civilizacionFree(civilizacion);
+    civilizaciones = civilizacionesFree(civilizaciones);
 
     return EXIT_SUCCESS;
 }

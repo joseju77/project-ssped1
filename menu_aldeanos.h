@@ -20,7 +20,7 @@ enum OPTIONS {
 };
 
 
-void menuAldeanos(AldeanosLista *aldeanosLista) 
+void menuAldeanos(AldeanosLista *aldeanosLista, char *nombreCivi) 
 {
     int opt;
     Aldeano *aldeano;
@@ -29,7 +29,7 @@ void menuAldeanos(AldeanosLista *aldeanosLista)
     do
     {
         system("CLS");
-        cout << "Lista de Aldeanos" << endl << INIT << ") Iniciar" << endl
+        cout << "Lista de Aldeanos (" << nombreCivi << ")" << endl << INIT << ") Iniciar" << endl
             << FREE << ") Liberar" << endl
             << AGREGAR_INICIO << ") Agregar al inicio" << endl
             << AGREGAR_FINAL << ") Agregar al final" << endl
@@ -133,10 +133,11 @@ void menuAldeanos(AldeanosLista *aldeanosLista)
             default:
                 break;
         }
-        cout << endl << "<<Enter>>";
-        cin.get();
+        if (opt != EXIT) {
+            cout << endl << "<<Enter>>";
+            cin.get();
+        }
     } while (opt != EXIT);
-    
 }
 
 #endif

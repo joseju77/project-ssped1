@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include "lista_aldeanos.h"
+#include "utilidades.h"
 
 using namespace std;
 
@@ -31,7 +32,7 @@ Civilizacion *civilizacionInit(char *nombre)
 
 Civilizacion *civilizacionFree(Civilizacion *civilizacion)
 {
-    if (civilizacion) {
+    if (!civilizacion) {
         cout << "Civilizacion sin memoria" << endl;
     }
     free(civilizacion->nombre);
@@ -42,5 +43,29 @@ Civilizacion *civilizacionFree(Civilizacion *civilizacion)
     return civilizacion;
 }
 
+Civilizacion *civilizacionCapturar()
+{
+    char *nombre = readChar("Nombre: ");
+    Civilizacion *civilizacion = civilizacionInit(nombre);
+
+    return civilizacion;
+}
+
+bool civilizacionMostrar(Civilizacion *civilizacion)
+{
+    if (!civilizacion) {
+        cout << "Civilizacion sin memoria" << endl;
+    }
+
+    cout << "Civilizacion: " << civilizacion->nombre << endl;
+
+    if (aldeanosListaMostrarTabla(civilizacion->aldeanosLista)) {
+        cout << "Se mostro la lista de aldeanos" << endl;
+    } else {
+        cout << "Error al mostrar la lista de aldeanos" << endl;
+        return false;
+    }
+    return true;
+}
 
 #endif
