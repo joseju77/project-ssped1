@@ -7,6 +7,7 @@
 
 #include "lista_aldeanos.h"
 #include "utilidades.h"
+#include "barcos.h"
 
 using namespace std;
 
@@ -14,6 +15,7 @@ struct civilizacion
 {
     char *nombre;
     AldeanosLista *aldeanosLista;
+    Puerto *puerto;
 };
 
 typedef struct civilizacion Civilizacion;
@@ -26,6 +28,8 @@ Civilizacion *civilizacionInit(char *nombre)
     }
     civilizacion->nombre = strdup(nombre);
     civilizacion->aldeanosLista = aldeanosListaInit();
+
+    civilizacion->puerto = puertoInit();
 
     return civilizacion;
 }

@@ -8,7 +8,6 @@
 
 #include "utilidades.h"
 
-using namespace std;
 
 struct aldeano
 {

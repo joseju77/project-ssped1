@@ -7,8 +7,6 @@
 
 #include "aldeano.h"
 
-using namespace std;
-
 #define CAPACIDAD 3
 
 struct lista_aldeanos

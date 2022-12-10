@@ -28,4 +28,23 @@ int readInt(char *message)
     return integer;
 }
 
+float readFloat(char *message)
+{
+    float flo;
+
+    printf("%s", message);
+    scanf("%f", &flo);
+
+    return flo;
+}
+
+char readCharNP(char *message)
+{
+    char val[100];
+    printf("%s", message);
+    scanf("%s", &val);
+    return val[100];
+}
+
+
 #endif
