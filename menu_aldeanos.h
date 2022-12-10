@@ -19,15 +19,18 @@ enum OPTIONS {
     MOSTRAR, MOSTRAR_TABLA, PUERTO,
     AGREGAR_BARCO_INICIO, AGREGAR_BARCO_FIN, ELIMINAR_BARCO_INICIO, ELIMINAR_BARCO_FIN, MOSTRAR_BARCOS, BUSCAR_BARCOS,
     AGREGAR_GUERRERO, ELIMINAR_GUERRERO, MOSTRAR_ULTIMO_GUERRERO, MOSTRAR_GUERREROS,
+    BATALLA, BATALLA_AGREGAR_INICIO, BATALLA_AGREGAR_FINAL, BATALLA_SACAR_BARCO, BATALLA_MOSTRAR,
     EXIT
 };
 
 
-bool menuPuerto(Puerto *puerto, char *nombreCivi);
+void menuPuerto(Puerto *puerto, char *nombreCivi);
 
-bool menuBarco(Barco *barco, int id);
+void menuBarco(Barco *barco, int id);
 
-void menuAldeanos(AldeanosLista *aldeanosLista, char *nombreCivi, Puerto *puerto) 
+void menuBatalla(Batalla *barco, Puerto *puerto);
+
+void menuAldeanos(AldeanosLista *aldeanosLista, char *nombreCivi, Puerto *puerto, Batalla *batalla) 
 {
     int opt;
     Aldeano *aldeano;
@@ -44,8 +47,10 @@ void menuAldeanos(AldeanosLista *aldeanosLista, char *nombreCivi, Puerto *puerto
             << ELIMINAR_FINAL << ") Eliminar al final" << endl
             << ELIMINAR << ") Eliminar en alguna posicion" << endl
             << MOSTRAR << ") Mostrar" << endl
+            << MOSTRAR_TABLA << ") Mostrar Tabla" << endl
             << PUERTO << ") Puerto" << endl
-            << EXIT << ") Salir" << endl << "Opcion: ";
+            << BATALLA << ") Batalla" << endl
+            << EXIT << ") Regresar" << endl << "Opcion: ";
         cin >> opt;
         cin.ignore();
         switch (opt)
@@ -138,6 +143,10 @@ void menuAldeanos(AldeanosLista *aldeanosLista, char *nombreCivi, Puerto *puerto
                 break;
             case PUERTO:
                 menuPuerto(puerto, nombreCivi);
+                break;
+            case BATALLA:
+                menuBatalla(batalla, puerto);
+                break;
             default:
                 break;
         }
@@ -148,7 +157,106 @@ void menuAldeanos(AldeanosLista *aldeanosLista, char *nombreCivi, Puerto *puerto
     } while (opt != EXIT);
 }
 
-bool menuBarco(PilaGuerreros *pilaGuerreros, int id)
+void menuBatalla(Batalla *batalla, Puerto *puerto)
+{
+    int opt;
+    Barco *barco;
+    do
+    {
+        system("CLS");
+        cout << "Batalla " << endl
+            << BATALLA_AGREGAR_INICIO << ") Agregar barco del inicio" << endl
+            << BATALLA_AGREGAR_FINAL << ") Agregar barco del final" << endl
+            << BATALLA_SACAR_BARCO << ") Sacar barco de la batalla" << endl
+            << BATALLA_MOSTRAR << ") Mostrar barcos en batalla" << endl
+            << EXIT << ") Regresar" << endl << "Opcion: ";
+        cin >> opt;
+        cin.ignore();
+        switch (opt)
+        {
+            case BATALLA_AGREGAR_INICIO:
+                if (puertoVacia(puerto)) {
+                    cout << "Puerto vacio" << endl;
+                    break;
+                }
+                barco = puerto->inicio;
+                if (barco->combustible > 0.0) {
+                    barco->velocidad = readFloat("Nueva velocidad: ");
+                    cin.ignore();
+                    puertoEliminarInicio(puerto, 1);
+                    batallaEncolar(batalla, barco);
+                    cout << "Barco agregado a la batalla" << endl;
+                    break;
+                }
+                cout << "Barco sin combustible, no se agrego a la batalla" << endl;
+                break;
+            case BATALLA_AGREGAR_FINAL:
+                if (puertoVacia(puerto)) {
+                    cout << "Puerto vacio" << endl;
+                    break;
+                }
+                barco = puerto->final;
+                if (barco->combustible > 0.0) {
+                    barco->velocidad = readFloat("Nueva velocidad: ");
+                    cin.ignore();
+                    puertoEliminarFinal(puerto, 1);
+                    batallaEncolar(batalla, barco);
+                    cout << "Barco agregado a la batalla" << endl;
+                    break;
+                }
+                cout << "Barco sin combustible, no se agrego a la batalla" << endl;
+                break;
+            case BATALLA_SACAR_BARCO:
+                barco = batallaTomar(batalla);
+                int destino;
+                barco->velocidad = 0.0;
+                barco->armadura = readFloat("Nueva armadura: ");
+                barco->combustible = readFloat("Nuevo combustible: ");
+                if (barco->armadura != 0.0) {
+                    do
+                    {
+                        cout << "Donde se insertara el barco" << endl << "1) Inicio del puerto" << endl << "2) Fin del puerto" << endl << "Opcion: ";
+                        cin >> destino;
+                        cin.ignore();
+                        if (destino == 1) {
+                            batallaDesencolar(batalla);
+                            puertoInsertarInicio(puerto, barco);
+                            break;
+                        }
+                        else if (destino == 2) {
+                            batallaDesencolar(batalla);
+                            puertoInsertarFinal(puerto, barco);
+                            break;
+                        }
+                        else {
+                            cout << "Opcion invalida" << endl << "<<ENTER>>";
+                            cin.get();
+                        }
+                    } while (destino != 1 || destino != 2);
+                    cout << "Barco insertado en el puerto" << endl;
+                    cin.ignore();
+                } else {
+                    cin.ignore();
+                    batallaDesencolar(batalla);
+                    barcoFree(barco);
+                    barco = NULL;
+                    cout << "El barco fue destruido, no se inserto en el puerto" << endl;
+                }
+                break;
+            case BATALLA_MOSTRAR:
+                batallaMostrar(batalla);
+                break;
+            default:
+                break;
+        }
+        if (opt != EXIT) {
+            cout << endl << "<<Enter>>";
+            cin.get();
+        }
+    } while (opt != EXIT);
+}
+
+void menuBarco(PilaGuerreros *pilaGuerreros, int id)
 {
     int opt;
     Guerrero *guerrero;
@@ -160,7 +268,7 @@ bool menuBarco(PilaGuerreros *pilaGuerreros, int id)
             << ELIMINAR_GUERRERO << ") Eliminar guerrero" << endl
             << MOSTRAR_ULTIMO_GUERRERO << ") Mostrar ultimo guerrero" << endl
             << MOSTRAR_GUERREROS << ") Mostrar guerreros" << endl
-            << EXIT << ") Salir" << endl << "Opcion: ";
+            << EXIT << ") Regresa" << endl << "Opcion: ";
         cin >> opt;
         cin.ignore();
         switch (opt)
@@ -203,7 +311,7 @@ bool menuBarco(PilaGuerreros *pilaGuerreros, int id)
     } while (opt != EXIT);
 }
 
-bool menuPuerto(Puerto *puerto, char *nombreCivi)
+void menuPuerto(Puerto *puerto, char *nombreCivi)
 {
     int opt;
     Barco *barco;
@@ -217,7 +325,7 @@ bool menuPuerto(Puerto *puerto, char *nombreCivi)
             << ELIMINAR_BARCO_FIN << ") Eliminar al final" << endl
             << MOSTRAR_BARCOS << ") Mostrar" << endl
             << BUSCAR_BARCOS << ") Buscar" << endl
-            << EXIT << ") Salir" << endl << "Opcion: ";
+            << EXIT << ") Regresar" << endl << "Opcion: ";
         cin >> opt;
         cin.ignore();
         switch (opt)
@@ -262,6 +370,7 @@ bool menuPuerto(Puerto *puerto, char *nombreCivi)
             case BUSCAR_BARCOS: {
                 int id = readInt("Id del barco: ");
                 barco = puertoBuscar(puerto, id);
+                cin.ignore();
                 if(barco) {
                     menuBarco(barco->guerreros, id);
                     break;

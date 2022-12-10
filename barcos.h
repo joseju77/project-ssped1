@@ -66,6 +66,7 @@ bool barcoMostrar(Barco *barco)
 {
     if (barco) {
         cout << "Id: " << barco->id << endl << "Combustible: " << barco->combustible << endl << "Velocidad: " << barco->velocidad << endl << "Armadura: " << barco->armadura << endl << endl;
+        pilaGuerrerosMostrar(barco->guerreros);
         return true;
     }
     return false;
@@ -134,7 +135,6 @@ bool puertoInsertarFinal(Puerto *puerto, Barco *barco)
         return false;
     }
 
-
     if (puertoVacia(puerto)) {
         puerto->inicio = barco;
         puerto->final = barco;
@@ -142,6 +142,7 @@ bool puertoInsertarFinal(Puerto *puerto, Barco *barco)
         return true;
     }
 
+    barco->siguiente = NULL;
     barco->anterior = puerto->final;
     puerto->final->siguiente = barco;
     puerto->final = barco;
@@ -172,7 +173,7 @@ bool puertoMostrar(Puerto *puerto)
     return true;
 }
 
-bool puertoEliminarInicio(Puerto *puerto)
+bool puertoEliminarInicio(Puerto *puerto, int modo = 0)
 {
     if (!puerto) {
         cout << "Puerto sin memoria" << endl;
@@ -193,13 +194,15 @@ bool puertoEliminarInicio(Puerto *puerto)
         puerto->inicio->anterior = NULL;
     }
 
-    tmp = barcoFree(tmp);
-    tmp = NULL;
+    if (modo = 0) {
+        tmp = barcoFree(tmp);
+        tmp = NULL;
+    }
 
     return true;
 }
 
-bool puertoEliminarFinal(Puerto *puerto)
+bool puertoEliminarFinal(Puerto *puerto, int modo = 0)
 {
     if (!puerto) {
         cout << "Puerto sin memoria" << endl;
@@ -214,8 +217,11 @@ bool puertoEliminarFinal(Puerto *puerto)
     puerto->final = tmp->anterior;
     puerto->cantidad--;
     
-    tmp = barcoFree(tmp);
-    tmp = NULL;
+    if (modo = 0) {
+        tmp = barcoFree(tmp);
+        tmp = NULL;
+    }
+    
 
     if (puertoVacia(puerto)) {
         puerto->final = NULL;

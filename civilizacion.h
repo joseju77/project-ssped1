@@ -8,6 +8,7 @@
 #include "lista_aldeanos.h"
 #include "utilidades.h"
 #include "barcos.h"
+#include "batalla.h"
 
 using namespace std;
 
@@ -16,6 +17,7 @@ struct civilizacion
     char *nombre;
     AldeanosLista *aldeanosLista;
     Puerto *puerto;
+    Batalla *batalla;
 };
 
 typedef struct civilizacion Civilizacion;
@@ -30,6 +32,7 @@ Civilizacion *civilizacionInit(char *nombre)
     civilizacion->aldeanosLista = aldeanosListaInit();
 
     civilizacion->puerto = puertoInit();
+    civilizacion->batalla = batallaInit();
 
     return civilizacion;
 }

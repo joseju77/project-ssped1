@@ -1,5 +1,5 @@
-#ifndef LISTALIGADA_H
-#define LISTALIGADA_H
+#ifndef CIVILIZACIONES_H
+#define CIVILIZACIONES_H
 
 #include <stdio.h>
 #include <stdlib.h>

@@ -71,6 +71,15 @@ bool guerreroMostrar(Guerrero *guerrero)
     return false;
 }
 
+bool guerreroMostrarFila(Guerrero *guerrero)
+{
+    if (guerrero) {
+        printf("|%4i|%5i|%.2f|%.2f|%15s|\n", guerrero->id, guerrero->salud, guerrero->fuerza, guerrero->escudo, guerrero->tipo);
+        return true;
+    }
+    return false;
+}
+
 struct pila
 {
     Guerrero *raiz;
@@ -128,11 +137,11 @@ bool pilaGuerrerosMostrar(PilaGuerreros *pilaGuerreros)
         return false;
     }
 
-    cout << "Capacidad: " << pilaGuerreros->cantidad << endl;
+    cout << "Cantidad: " << pilaGuerreros->cantidad << endl;
     Guerrero *tmp = pilaGuerreros->raiz;
-
+    printf("|%4s|%5s|%5s|%5s|%15s|\n", "ID", "Salud", "Fuerza", "Escudo", "Tipo");
     while (tmp) {
-        guerreroMostrar(tmp);
+        guerreroMostrarFila(tmp);
         tmp = tmp->siguiente;
     }
     

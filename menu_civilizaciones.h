@@ -101,7 +101,7 @@ void menuCivilizaciones(Civilizaciones *civilizaciones)
                 char *nombre = readChar("Nombre de la civilizacion: ");
                 civilizacion = civilizacionesBuscar(civilizaciones, nombre);
                 if(civilizacion) {
-                    menuAldeanos(civilizacion->aldeanosLista, nombre, civilizacion->puerto);
+                    menuAldeanos(civilizacion->aldeanosLista, nombre, civilizacion->puerto, civilizacion->batalla);
                     break;
                 }
                 cout << "No se encontro la civilizacion" << endl;
